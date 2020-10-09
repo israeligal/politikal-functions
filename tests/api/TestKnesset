@@ -1,0 +1,15 @@
+import unittest
+
+from azure.functions import HttpRequest
+
+import Api.Knesset
+
+class TestKnesset(unittest.TestCase):
+
+    def test_main(self):
+        HttpRequest()
+        Api.Knesset.main()
+
+
+if __name__ == '__main__':
+    unittest.main()
