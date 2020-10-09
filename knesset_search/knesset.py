@@ -1,24 +1,38 @@
 import requests
+import json
 from pyodata.v2.service import GetEntitySetFilter as esf
 from patched_odata import odata_client
+
 BASE_URL = "http://knesset.gov.il/Odata/ParliamentInfo.svc"
 
 
 def knesset_handler(event, context):
+    params = event.get('queryStringParameters')
+
+    bills = params.get('bills')
+
+    if bills:
+        bills = json.loads(bills)
+
+    states = bills.get('states') if bills else None
+
     client = odata_client.Client(BASE_URL, requests.Session())
 
     bills_request = client.entity_sets.KNS_Bill.get_entities()
-    state_query = list(map(lambda state: bills_request.StatusID == state, [108, 109, 111, 141, 167]))
 
-    bills_request = bills_request.filter(
-        esf.or_(
-            *state_query
-        )
-    )
+    states_query = list(map(lambda state: bills_request.StatusID == state, states))
 
-    response = bills_request.execute()
+    states_query = esf.or_(*states_query) if len(states_query) > 1 else states_query[0]
+
+    bills_request = bills_request.filter(states_query)
+
+    response = bills_request.top(4).execute()
 
     return {
-        'values': response['value'],
-        'next': response['odata.nextLink']
+        'event': event,
+        'params': params,
+        'bills': bills,
+        'states': states,
+        'values': response['value']
     }
+

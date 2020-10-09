@@ -1,14 +1,12 @@
 import unittest
 
-from azure.functions import HttpRequest
+from knesset_search import knesset
 
-import Api.Knesset
 
 class TestKnesset(unittest.TestCase):
 
     def test_main(self):
-        HttpRequest()
-        Api.Knesset.main()
+        knesset.knesset_handler({ 'queryStringParameters': { 'bills' : { "states": '[1,3,4]' } } }, None)
 
 
 if __name__ == '__main__':
