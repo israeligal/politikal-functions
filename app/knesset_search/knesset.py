@@ -1,6 +1,6 @@
 import json
 
-from knesset_search.odata_request_builder import KnessetBillsRequestBuilder
+from knesset_search import odata_request_builder
 
 
 def parse_bills(params):
@@ -11,8 +11,6 @@ def parse_bills(params):
 
     if bills:
         return json.loads(bills)
-
-
     else:
         raise Exception("no no bills params")
 
@@ -24,7 +22,7 @@ def knesset_handler(event, context):
     states = bills.get('states')
     knesset_num = bills.get('knessetNum')
 
-    request_builder = KnessetBillsRequestBuilder()
+    request_builder = odata_request_builder.KnessetBillsRequestBuilder()
 
     if states:
         request_builder.with_states(states)

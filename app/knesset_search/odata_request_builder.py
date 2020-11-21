@@ -1,6 +1,7 @@
 import requests
-from patched_odata import odata_client
 from pyodata.v2.service import GetEntitySetFilter as esf
+
+from knesset_search.patched_odata import odata_client
 
 BASE_URL = "http://knesset.gov.il/Odata/ParliamentInfo.svc"
 

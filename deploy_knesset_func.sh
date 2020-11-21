@@ -17,7 +17,7 @@ rm -r lxml
 
 mv ../lxml .
 
-cd "$PROJECT_PATH"/knesset_search || exit
+cd "$PROJECT_PATH"/app || exit
 
 zip -r9 "$PROJECT_PATH"/func.zip .
 

@@ -1,12 +1,12 @@
 import unittest
 
-from knesset_search import knesset
+from app.knesset_search import knesset
 
 
 class TestKnesset(unittest.TestCase):
 
     def test_main(self):
-        knesset.knesset_handler({ 'queryStringParameters': { 'bills' : { "states": '[1,3,4]' } } }, None)
+        knesset.knesset_handler({'queryStringParameters': {'bills' : {"states": '[1,3,4]'}}}, None)
 
 
 if __name__ == '__main__':
