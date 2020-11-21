@@ -1,32 +1,42 @@
-import requests
 import json
-from pyodata.v2.service import GetEntitySetFilter as esf
-from patched_odata import odata_client
 
-BASE_URL = "http://knesset.gov.il/Odata/ParliamentInfo.svc"
+from knesset_search.odata_request_builder import KnessetBillsRequestBuilder
 
 
-def knesset_handler(event, context):
-    params = event.get('queryStringParameters')
+def parse_bills(params):
+    if not params:
+        raise Exception("no params")
 
     bills = params.get('bills')
 
     if bills:
-        bills = json.loads(bills)
+        return json.loads(bills)
 
-    states = bills.get('states') if bills else None
 
-    client = odata_client.Client(BASE_URL, requests.Session())
+    else:
+        raise Exception("no no bills params")
 
-    bills_request = client.entity_sets.KNS_Bill.get_entities()
 
-    states_query = list(map(lambda state: bills_request.StatusID == state, states))
+def knesset_handler(event, context):
+    params = event.get('queryStringParameters')
+    bills = parse_bills(params)
 
-    states_query = esf.or_(*states_query) if len(states_query) > 1 else states_query[0]
+    states = bills.get('states')
+    knesset_num = bills.get('knessetNum')
 
-    bills_request = bills_request.filter(states_query)
+    request_builder = KnessetBillsRequestBuilder()
 
-    response = bills_request.top(4).execute()
+    if states:
+        request_builder.with_states(states)
+
+    if knesset_num:
+        request_builder.with_knesset_num(knesset_num)
+
+    bills_request = request_builder.build()
+
+    response = bills_request.top(6).execute()
+
+    print(f"got response {response['value']}")
 
     return {
         'event': event,
@@ -36,3 +46,5 @@ def knesset_handler(event, context):
         'values': response['value']
     }
 
+
+knesset_handler({ 'queryStringParameters': { "bills": '{ "states": [108, 109, 111, 141, 167], "knessetNum": 23 }' } }, None)

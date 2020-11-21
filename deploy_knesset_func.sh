@@ -23,4 +23,4 @@ zip -r9 "$PROJECT_PATH"/func.zip .
 
 cd "$PROJECT_PATH" || exit
 
-aws lambda update-function-code --function-name knesset-search --zip-file fileb://func.zip
+aws lambda update-function-code --function-name knesset-search --zip-file fileb://func.zip  --profile politikal
