@@ -96,4 +96,4 @@ def _add_person_and_faction(persons_with_positions, bill):
         initiator['faction_id'] = position['FactionID']
 
 
-# knesset_handler({'queryStringParameters': {"bills": '{ "states": [108, 109, 111, 141, 167], "knessetNum": 23 }'}}, None)
+knesset_handler({'queryStringParameters': {"bills": '{ "states": [108, 109, 111, 141, 167], "knessetNum": 23 }'}}, None)

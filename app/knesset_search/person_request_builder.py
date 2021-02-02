@@ -9,7 +9,7 @@ BASE_URL = "http://knesset.gov.il/Odata/ParliamentInfo.svc"
 class PersonRequestBuilder:
 
     def __init__(self):
-        self.client = odata_client.Client(BASE_URL, requests.Session())
+        # self.client = odata_client.Client(BASE_URL, requests.Session())
         self.person_entities = self.client.entity_sets.KNS_Person.get_entities()
         self.ids = None
         self.position = True
