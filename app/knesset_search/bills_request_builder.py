@@ -6,7 +6,7 @@ from knesset_search.patched_odata import odata_client
 BASE_URL = "http://knesset.gov.il/Odata/ParliamentInfo.svc"
 
 
-class KnessetBillsRequestBuilder:
+class BillsRequestBuilder:
 
     def __init__(self):
         self.client = odata_client.Client(BASE_URL, requests.Session())
@@ -26,10 +26,12 @@ class KnessetBillsRequestBuilder:
         if self.states:
             query = self._add_states()
 
-        if self.knesset_num:
+        if self.knesset_num and self.states:
             query = esf.and_(query, self.bills_entities.KnessetNum == self.knesset_num)
+        elif self.knesset_num:
+            query = self.bills_entities.KnessetNum == self.knesset_num
 
-        return self.bills_entities.filter(query)
+        return self.bills_entities.filter(query).expand('KNS_BillInitiators')
 
     def _add_states(self):
         states_query = list(map(lambda state: self.bills_entities.StatusID == state, self.states))
